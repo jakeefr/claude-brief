@@ -18,7 +18,7 @@
   <a href="https://openclaw.ai"><img src="https://img.shields.io/badge/OpenClaw-gateway-orange.svg" alt="OpenClaw"/></a>
 </p>
 
-Claude Code Routines run while you're away — but until now there was no easy way to see what they actually did. claude-brief gives you a structured digest of every session: files changed, commits made, tokens spent, errors hit. Works locally and delivers to Slack, Telegram, Discord, ntfy, and OpenClaw gateways.
+Claude Code Routines run while you're away, but until now there was no easy way to see what they actually did. claude-brief gives you a structured digest of every session: files changed, commits made, tokens spent, errors hit. Works locally and delivers to Slack, Telegram, Discord, ntfy, and OpenClaw gateways.
 
 ## 📦 Install
 
@@ -278,7 +278,7 @@ Session summaries are stored locally in SQLite at `~/.claude-brief/db.sqlite`. O
 <details>
 <summary>What about the OpenClaw gateway?</summary>
 
-The OpenClaw integration sends digest text to your configured messaging channel (Telegram, Slack, etc.) via OpenClaw's local gateway process. No data passes through claude-brief's servers — delivery goes directly from your machine through your configured channels.
+The OpenClaw integration sends digest text to your configured messaging channel (Telegram, Slack, etc.) via OpenClaw's local gateway process. No data passes through claude-brief's servers - delivery goes directly from your machine through your configured channels.
 
 </details>
 
