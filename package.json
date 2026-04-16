@@ -1,0 +1,66 @@
+{
+  "name": "claude-brief",
+  "version": "1.0.0",
+  "description": "Pick up exactly where your agents left off. Session digest and history browser for Claude Code.",
+  "type": "module",
+  "main": "dist/cli.js",
+  "bin": {
+    "claude-brief": "dist/cli.js"
+  },
+  "files": [
+    "dist/",
+    "hooks/",
+    "assets/splash.svg",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "jest --passWithNoTests",
+    "lint": "eslint src/"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "ai",
+    "agent",
+    "digest",
+    "session",
+    "tui",
+    "cli"
+  ],
+  "author": "Jake",
+  "license": "MIT",
+  "homepage": "https://github.com/jakeefr/claude-brief",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jakeefr/claude-brief.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jakeefr/claude-brief/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.0.0",
+    "commander": "^12.0.0",
+    "ink": "^4.4.1",
+    "ink-gradient": "^3.0.0",
+    "ink-select-input": "^5.0.0",
+    "ink-spinner": "^5.0.0",
+    "ink-text-input": "^5.0.1",
+    "open": "^10.0.0",
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.0",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "jest": "^29.0.0",
+    "playwright": "^1.59.1",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0"
+  }
+}

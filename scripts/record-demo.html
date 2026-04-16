@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1200px;
+    height: 600px;
+    background: #0a0a0f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    font-family: 'SF Mono', 'Cascadia Code', 'JetBrains Mono', 'Consolas', monospace;
+  }
+  .terminal {
+    width: 1140px;
+    height: 560px;
+    background: #1e1e2e;
+    border-radius: 10px;
+    border: 1px solid #313244;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .titlebar {
+    height: 36px;
+    min-height: 36px;
+    background: #181825;
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    border-bottom: 1px solid #313244;
+  }
+  .dots { display: flex; gap: 8px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .dot-red { background: #ff5f57; }
+  .dot-yellow { background: #febc2e; }
+  .dot-green { background: #28c840; }
+  .title-text {
+    flex: 1;
+    text-align: center;
+    color: #585878;
+    font-family: 'SF Pro Display', 'Segoe UI', -apple-system, sans-serif;
+    font-size: 12px;
+    margin-right: 52px;
+  }
+  #content {
+    flex: 1;
+    padding: 10px 16px;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #cdd6f4;
+    overflow: hidden;
+    white-space: pre;
+  }
+  .cursor {
+    display: inline-block;
+    width: 7px;
+    height: 15px;
+    background: #cdd6f4;
+    vertical-align: text-bottom;
+    margin-left: 1px;
+  }
+  .cursor.blink { animation: blink 1s step-end infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+</style>
+</head>
+<body>
+<div class="terminal">
+  <div class="titlebar">
+    <div class="dots">
+      <div class="dot dot-red"></div>
+      <div class="dot dot-yellow"></div>
+      <div class="dot dot-green"></div>
+    </div>
+    <div class="title-text">claude-brief &mdash; bash &mdash; 120&times;35</div>
+  </div>
+  <div id="content"></div>
+</div>
+<script>
+const el = document.getElementById('content');
+let buf = '';
+
+function render() {
+  el.innerHTML = buf;
+  el.scrollTop = el.scrollHeight;
+}
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+function prompt() {
+  return '<span style="color:#a6e3a1">user@machine</span> <span style="color:#585878">claude-brief %</span> ';
+}
+
+async function typeCmd(text) {
+  buf += prompt();
+  buf += '<span class="cursor"></span>';
+  render();
+  await sleep(200);
+  for (const ch of text) {
+    buf = buf.replace('<span class="cursor"></span>', '');
+    buf += ch + '<span class="cursor"></span>';
+    render();
+    await sleep(40 + Math.random() * 30);
+  }
+  buf = buf.replace('<span class="cursor"></span>', '');
+  render();
+  await sleep(80);
+  buf += '\n';
+  render();
+}
+
+async function showLines(lines, baseDelay) {
+  for (const l of lines) {
+    buf += l.html + '\n';
+    render();
+    await sleep(l.delay || baseDelay);
+  }
+}
+
+function L(html, delay) { return { html, delay }; }
+
+const c = {
+  purple: s => `<span style="color:#a78bfa;font-weight:700">${s}</span>`,
+  bold: s => `<span style="font-weight:700;color:#e8e8f0">${s}</span>`,
+  dim: s => `<span style="color:#5a5a7a">${s}</span>`,
+  muted: s => `<span style="color:#9d9db8">${s}</span>`,
+  desc: s => `<span style="color:#7a7a96">${s}</span>`,
+  green: s => `<span style="color:#34d399">${s}</span>`,
+  red: s => `<span style="color:#f87171">${s}</span>`,
+  yellow: s => `<span style="color:#fbbf24">${s}</span>`,
+  text: s => `<span style="color:#cdd6f4">${s}</span>`,
+};
+
+const SEP_D = '══════════════════════════════════════════════════════════════════';
+const SEP_S = '──────────────────────────────────────────────────────────────────';
+
+const digestOutput = [
+  L('', 20),
+  L(c.purple('claude-brief') + '  ' + c.dim('·') + '  since 24h ago', 100),
+  L(c.dim(SEP_D), 40),
+  L('', 20),
+  L('  ' + c.bold('4 sessions') + '  ' + c.dim('·') + '  ' + c.muted('3 projects') + '  ' + c.dim('·') + '  ' + c.bold('142k tokens') + '  ' + c.dim('(API equiv: ~$0.47)'), 120),
+  L('', 20),
+  L(c.dim(SEP_S), 40),
+  L('', 20),
+  L('  ' + c.green('✓') + c.text('  api-server       47min  ·  12 files  ·  sonnet  ·  ') + c.muted('89k') + '  ' + c.dim('(~$0.21)'), 100),
+  L('     ' + c.desc('Refactored auth middleware, added rate limiting'), 80),
+  L('     ' + c.dim('8 commits  ·  main'), 60),
+  L('', 20),
+  L('  ' + c.green('✓') + c.text('  frontend         23min  ·   5 files  ·  sonnet  ·  ') + c.muted('34k') + '  ' + c.dim('(~$0.18)'), 100),
+  L('     ' + c.desc('Added pagination to /api/users endpoint'), 80),
+  L('     ' + c.dim('3 commits  ·  feat/pagination'), 60),
+  L('', 20),
+  L('  ' + c.green('✓') + c.text('  frontend          8min  ·   3 files  ·  haiku   ·  ') + c.muted('12k') + '  ' + c.dim('(~$0.03)'), 100),
+  L('     ' + c.desc('Fixed CSV export alignment bug'), 80),
+  L('     ' + c.dim('main'), 60),
+  L('', 20),
+  L('  ' + c.red('✗') + c.text('  data-pipeline    15min  ·   2 files  ·  sonnet  ·  ') + c.muted('7k') + '   ' + c.dim('(~$0.05)'), 100),
+  L('     ' + c.red('FAILED: rate_limit error after 15min'), 80),
+  L('     Last action: pytest -x', 60),
+  L('     ' + c.dim('main'), 40),
+  L('', 20),
+  L(c.dim(SEP_S), 40),
+  L('', 20),
+  L('  ' + c.yellow('⚠  Pending attention:'), 100),
+  L('     • data-pipeline: rate_limit', 80),
+  L('', 20),
+  L(c.dim(SEP_S), 40),
+  L('', 20),
+  L('  ' + c.dim("Run 'claude-brief tui' to explore history  ·  'claude-brief dashboard' for web view"), 80),
+  L('', 20),
+];
+
+const statusOutput = [
+  L(c.text('4 sessions today') + ' ' + c.dim('·') + ' ' + c.text('142k tokens') + ' ' + c.dim('·') + ' ' + c.text('last brief 2h 34m ago'), 100),
+];
+
+async function run() {
+  buf = '';
+  render();
+  await sleep(400);
+
+  // Command 1: digest
+  await typeCmd('claude-brief --since 24h');
+  await sleep(250);
+  await showLines(digestOutput, 80);
+  await sleep(400);
+
+  // Command 2: status
+  await typeCmd('claude-brief status');
+  await sleep(250);
+  await showLines(statusOutput, 80);
+  await sleep(300);
+
+  // Final prompt with blinking cursor
+  buf += prompt() + '<span class="cursor blink"></span>';
+  render();
+  await sleep(3000);
+
+  // Loop
+  run();
+}
+
+run();
+</script>
+</body>
+</html>

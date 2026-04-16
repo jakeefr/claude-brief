@@ -1,0 +1,159 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" width="1200" height="300">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0a0f"/>
+      <stop offset="100%" stop-color="#0e0e16"/>
+    </linearGradient>
+    <linearGradient id="purple" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#a78bfa"/>
+    </linearGradient>
+    <pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="10" cy="10" r="0.4" fill="#8b5cf6"/>
+    </pattern>
+    <clipPath id="lpClip">
+      <rect x="30" y="68" width="470" height="210" rx="10"/>
+    </clipPath>
+    <clipPath id="rpClip">
+      <rect x="700" y="68" width="470" height="210" rx="10"/>
+    </clipPath>
+    <clipPath id="c1Clip">
+      <rect x="714" y="100" width="442" height="58" rx="8"/>
+    </clipPath>
+    <clipPath id="c2Clip">
+      <rect x="714" y="166" width="442" height="82" rx="8"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="300" fill="url(#bg)"/>
+  <rect width="1200" height="300" fill="url(#dots)" opacity="0.08"/>
+
+  <!-- ===== TOP LEFT: Badges ===== -->
+  <image href="claude-logo.png" x="10" y="8" width="22" height="22"/>
+  <text x="40" y="24" font-family="'Inter','SF Pro Display','Segoe UI',-apple-system,sans-serif"
+        font-size="11" fill="#9d9db8">Works with Claude Code</text>
+
+  <image href="openclaw-logo.png" x="10" y="34" width="22" height="22"/>
+  <text x="40" y="50" font-family="'Inter','SF Pro Display','Segoe UI',-apple-system,sans-serif"
+        font-size="11" fill="#9d9db8">Works with OpenClaw</text>
+
+  <!-- ===== TOP CENTER: Title ===== -->
+  <text x="600" y="30" font-family="'SF Mono','Cascadia Code','Fira Code','JetBrains Mono','Consolas',monospace"
+        font-size="30" font-weight="700" fill="url(#purple)" text-anchor="middle"
+        letter-spacing="-0.5">claude-brief</text>
+  <text x="600" y="48" font-family="'Inter','SF Pro Display','Segoe UI',-apple-system,sans-serif"
+        font-size="11" fill="#5a5a7a" text-anchor="middle"
+        letter-spacing="0.3">Session digests &#xB7; History browser &#xB7; Agent activity &#xB7; Delivery to Slack, Telegram &amp; more</text>
+
+  <!-- ===== LEFT PANEL: Terminal ===== -->
+  <rect x="30" y="68" width="470" height="210" rx="10" fill="#111118" stroke="#2a2a40" stroke-width="1"/>
+  <!-- Title bar -->
+  <rect x="30" y="68" width="470" height="24" fill="#1a1a24" clip-path="url(#lpClip)"/>
+  <line x1="30" y1="92" x2="500" y2="92" stroke="#2a2a40" stroke-width="0.5"/>
+  <!-- Traffic lights -->
+  <circle cx="48" cy="80" r="4" fill="#ff5f57"/>
+  <circle cx="62" cy="80" r="4" fill="#febc2e"/>
+  <circle cx="76" cy="80" r="4" fill="#28c840"/>
+  <text x="265" y="84" font-family="'Inter','SF Pro Display','Segoe UI',sans-serif"
+        font-size="9.5" fill="#3f3f50" text-anchor="middle">terminal</text>
+
+  <!-- Header -->
+  <text x="44" y="110" font-family="'SF Mono','Cascadia Code','Consolas',monospace" font-size="10.5">
+    <tspan fill="#8b5cf6" font-weight="600">claude-brief</tspan>
+    <tspan fill="#5a5a7a">  &#xB7;  </tspan>
+    <tspan fill="#9d9db8">since 2h 34m ago</tspan>
+  </text>
+  <line x1="44" y1="118" x2="486" y2="118" stroke="#2a2a40" stroke-width="0.5"/>
+
+  <!-- Stats -->
+  <text x="52" y="132" font-family="'SF Mono','Cascadia Code','Consolas',monospace" font-size="10.5">
+    <tspan fill="#e8e8f0" font-weight="600">4 sessions</tspan>
+    <tspan fill="#5a5a7a">  &#xB7;  </tspan>
+    <tspan fill="#9d9db8">3 projects</tspan>
+    <tspan fill="#5a5a7a">  &#xB7;  </tspan>
+    <tspan fill="#e8e8f0">142k tokens</tspan>
+    <tspan fill="#5a5a7a">  (API equiv: ~$0.47)</tspan>
+  </text>
+  <line x1="44" y1="140" x2="486" y2="140" stroke="#2a2a40" stroke-width="0.5"/>
+
+  <!-- Session 1 -->
+  <text x="52" y="158" font-family="'SF Mono','Cascadia Code','Consolas',monospace" font-size="10.5">
+    <tspan fill="#34d399">&#x2713;</tspan>
+    <tspan fill="#c8c8dc">  api-server      </tspan>
+    <tspan fill="#5a5a7a">47min &#xB7; 12 files &#xB7; sonnet &#xB7; 89k</tspan>
+  </text>
+  <text x="72" y="171" font-family="'SF Mono','Cascadia Code','Consolas',monospace"
+        font-size="9" fill="#4a4a64">Refactored auth middleware, added rate limiting</text>
+  <text x="72" y="182" font-family="'SF Mono','Cascadia Code','Consolas',monospace"
+        font-size="8.5" fill="#5a5a7a">8 commits  &#xB7;  main</text>
+
+  <!-- Session 2 -->
+  <text x="52" y="200" font-family="'SF Mono','Cascadia Code','Consolas',monospace" font-size="10.5">
+    <tspan fill="#34d399">&#x2713;</tspan>
+    <tspan fill="#c8c8dc">  frontend        </tspan>
+    <tspan fill="#5a5a7a"> 8min &#xB7;  3 files &#xB7; haiku  &#xB7; 12k</tspan>
+  </text>
+  <text x="72" y="213" font-family="'SF Mono','Cascadia Code','Consolas',monospace"
+        font-size="9" fill="#4a4a64">Fixed CSV export alignment bug</text>
+
+  <!-- Session 3 (failed) -->
+  <text x="52" y="232" font-family="'SF Mono','Cascadia Code','Consolas',monospace" font-size="10.5">
+    <tspan fill="#f87171">&#x2717;</tspan>
+    <tspan fill="#c8c8dc">  data-pipeline   </tspan>
+    <tspan fill="#5a5a7a">15min &#xB7;  2 files &#xB7; sonnet &#xB7; 7k</tspan>
+  </text>
+  <text x="72" y="245" font-family="'SF Mono','Cascadia Code','Consolas',monospace"
+        font-size="9" fill="#f87171">FAILED: rate_limit error after 15min</text>
+
+  <!-- ===== CENTER: Arrow ===== -->
+  <line x1="516" y1="175" x2="680" y2="175" stroke="#6d28d9" stroke-width="2" stroke-dasharray="6,5"/>
+  <polygon points="680,170 692,175 680,180" fill="#8b5cf6"/>
+
+  <!-- ===== RIGHT PANEL: Notifications ===== -->
+  <rect x="700" y="68" width="470" height="210" rx="10" fill="#111118" stroke="#2a2a40" stroke-width="1"/>
+  <!-- Title bar -->
+  <rect x="700" y="68" width="470" height="24" fill="#1a1a24" clip-path="url(#rpClip)"/>
+  <line x1="700" y1="92" x2="1170" y2="92" stroke="#2a2a40" stroke-width="0.5"/>
+  <!-- Notification dot + label -->
+  <circle cx="718" cy="80" r="3" fill="#a78bfa" opacity="0.6"/>
+  <text x="935" y="84" font-family="'Inter','SF Pro Display','Segoe UI',sans-serif"
+        font-size="9.5" fill="#3f3f50" text-anchor="middle">Notifications</text>
+
+  <!-- Card 1: Summary -->
+  <rect x="714" y="100" width="442" height="58" rx="8" fill="#161624" stroke="#252540" stroke-width="1"/>
+  <rect x="714" y="100" width="4" height="58" fill="#8b5cf6" clip-path="url(#c1Clip)"/>
+  <text x="728" y="118" font-family="'Inter','SF Pro Display','Segoe UI',sans-serif"
+        font-size="11" fill="#a78bfa" font-weight="600">claude-brief</text>
+  <text x="1148" y="118" font-family="'Inter','SF Pro Display','Segoe UI',sans-serif"
+        font-size="8.5" fill="#3a3a56" text-anchor="end">just now</text>
+  <text x="728" y="133" font-family="'SF Mono','Cascadia Code','Consolas',monospace"
+        font-size="9.5" fill="#9d9db8">4 sessions &#xB7; 3 projects &#xB7; 142k tokens</text>
+  <text x="728" y="148" font-family="'SF Mono','Cascadia Code','Consolas',monospace"
+        font-size="9" fill="#4a4a64">API equiv: ~$0.47</text>
+
+  <!-- Card 2: Session list -->
+  <rect x="714" y="166" width="442" height="82" rx="8" fill="#161624" stroke="#252540" stroke-width="1"/>
+  <rect x="714" y="166" width="4" height="82" fill="#8b5cf6" clip-path="url(#c2Clip)"/>
+
+  <text x="728" y="186" font-family="'SF Mono','Cascadia Code','Consolas',monospace" font-size="10">
+    <tspan fill="#34d399">&#x2713;</tspan>
+    <tspan fill="#c8c8dc"> api-server</tspan>
+    <tspan fill="#5a5a7a">    47min &#xB7; 12 files &#xB7; 89k</tspan>
+  </text>
+  <text x="742" y="198" font-family="'SF Mono','Cascadia Code','Consolas',monospace"
+        font-size="8.5" fill="#5a5a7a">Refactored auth middleware</text>
+
+  <text x="728" y="216" font-family="'SF Mono','Cascadia Code','Consolas',monospace" font-size="10">
+    <tspan fill="#34d399">&#x2713;</tspan>
+    <tspan fill="#c8c8dc"> frontend</tspan>
+    <tspan fill="#5a5a7a">       8min &#xB7;  3 files &#xB7; 12k</tspan>
+  </text>
+
+  <text x="728" y="238" font-family="'SF Mono','Cascadia Code','Consolas',monospace" font-size="10">
+    <tspan fill="#f87171">&#x2717;</tspan>
+    <tspan fill="#c8c8dc"> data-pipeline</tspan>
+    <tspan fill="#f87171">  FAILED</tspan>
+    <tspan fill="#5a5a7a">  rate_limit</tspan>
+  </text>
+</svg>

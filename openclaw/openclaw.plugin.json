@@ -1,0 +1,46 @@
+{
+  "id": "claude-brief",
+  "name": "claude-brief (Agent Briefing Digest)",
+  "kind": "lifecycle",
+  "version": "1.0.0",
+  "description": "Pick up exactly where your agents left off. Instant digest of everything Claude did since you last checked.",
+  "homepage": "https://github.com/jakeefr/claude-brief",
+  "author": "Jake",
+  "license": "MIT",
+  "skills": ["skills/brief"],
+  "configSchema": {
+    "type": "object",
+    "properties": {
+      "deliveryChannel": {
+        "type": "string",
+        "enum": ["telegram", "whatsapp", "discord", "slack", "signal", "imessage", "line"],
+        "description": "Messaging channel for briefing delivery"
+      },
+      "deliveryTo": {
+        "type": "string",
+        "description": "Recipient ID for the delivery channel (chat ID, phone number, channel ID)"
+      },
+      "botToken": {
+        "type": "string",
+        "description": "Optional: direct Telegram bot token (bypasses OpenClaw channel bridge)"
+      },
+      "schedule": {
+        "type": "string",
+        "default": "0 8 * * 1-5",
+        "description": "Cron expression for scheduled delivery. Default: 8am weekdays. Set to empty string to disable scheduled delivery."
+      },
+      "lookbackHours": {
+        "type": "number",
+        "default": 0,
+        "description": "Hours to look back. 0 = since last brief (recommended)."
+      },
+      "workspacePaths": {
+        "type": "array",
+        "items": { "type": "string" },
+        "default": [],
+        "description": "Workspace paths to scan. Empty = all projects."
+      }
+    },
+    "required": ["deliveryChannel", "deliveryTo"]
+  }
+}

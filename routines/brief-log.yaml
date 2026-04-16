@@ -1,0 +1,30 @@
+# claude-brief Routine awareness template
+# Add this as a final step in your Claude Code Routine to log activity
+# for claude-brief to pick up.
+#
+# Routines run on Anthropic's cloud and don't produce local JSONL files.
+# This template writes a .claude/brief-log.json summary to the repo
+# so claude-brief can include Routine activity in digests.
+
+name: brief-log
+description: Write a session summary for claude-brief after Routine completion
+
+steps:
+  - name: write-brief-log
+    prompt: |
+      Write a JSON file to .claude/brief-log.json with this schema:
+      {
+        "sessionId": "<generate a UUID>",
+        "source": "routine",
+        "timestamp": "<current ISO 8601 timestamp>",
+        "model": "<model used>",
+        "durationMs": <approximate duration>,
+        "filesEdited": [<list of files you modified>],
+        "filesCreated": [<list of files you created>],
+        "summary": "<one-line summary of what you did>",
+        "toolCalls": [{"name": "<tool>", "count": <number>}],
+        "gitCommits": [<commit messages if any>],
+        "errorCount": <number of errors encountered>
+      }
+
+      Only include metadata. Never include user prompt content.

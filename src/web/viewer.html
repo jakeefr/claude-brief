@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>claude-brief dashboard</title>
+<style>
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #111118;
+  --bg-card: #16161f;
+  --bg-card-hover: #1c1c28;
+  --border: #2a2a3a;
+  --border-accent: #4a3f6e;
+  --accent-primary: #8b5cf6;
+  --accent-secondary: #a78bfa;
+  --accent-glow: rgba(139, 92, 246, 0.15);
+  --text-primary: #f1f0f5;
+  --text-secondary: #9d9db8;
+  --text-muted: #5a5a7a;
+  --success: #34d399;
+  --error: #f87171;
+  --warning: #fbbf24;
+  --cost-color: #a78bfa;
+  --font-mono: "SF Mono", "Cascadia Code", "Fira Code", "Consolas", monospace;
+  --font-sans: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+.container { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }
+
+/* Header */
+.header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 0; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border);
+}
+.logo {
+  font-family: var(--font-mono); font-size: 1.5rem; font-weight: 700;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.header-right { display: flex; align-items: center; gap: 1rem; }
+.header-right span { color: var(--text-muted); font-size: 0.85rem; }
+.btn {
+  background: var(--bg-card); border: 1px solid var(--border); color: var(--text-primary);
+  padding: 0.4rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.85rem;
+  transition: all 0.15s ease;
+}
+.btn:hover { border-color: var(--accent-primary); box-shadow: 0 0 12px var(--accent-glow); }
+.time-select {
+  background: var(--bg-card); border: 1px solid var(--border); color: var(--text-primary);
+  padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.85rem; cursor: pointer;
+}
+.time-select option { background: var(--bg-secondary); }
+
+/* Stats row */
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+.stat-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 1.2rem; transition: all 0.15s ease;
+}
+.stat-card:hover { border-color: var(--border-accent); box-shadow: 0 0 20px var(--accent-glow); }
+.stat-label { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.stat-value { font-size: 1.75rem; font-weight: 700; font-family: var(--font-mono); margin-top: 0.25rem; }
+.stat-value.cost { color: var(--cost-color); }
+.stat-value.sessions { color: var(--accent-secondary); }
+.stat-value.tokens { color: var(--text-primary); }
+.stat-value.projects { color: var(--success); }
+
+/* Main layout */
+.main-layout { display: grid; grid-template-columns: 1fr 280px; gap: 1.5rem; }
+.main-content { min-width: 0; }
+
+/* Timeline */
+.section-title { color: var(--text-secondary); font-size: 0.85rem; font-weight: 600; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.timeline { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem; }
+.session-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 1rem 1.2rem; cursor: pointer; transition: all 0.15s ease;
+}
+.session-card:hover { border-color: var(--border-accent); box-shadow: 0 0 20px var(--accent-glow); }
+.session-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.4rem; }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.status-dot.success { background: var(--success); }
+.status-dot.error { background: var(--error); }
+.project-badge {
+  font-family: var(--font-mono); font-size: 0.85rem; font-weight: 600;
+  color: var(--accent-secondary);
+}
+.model-badge {
+  background: var(--bg-secondary); padding: 0.15rem 0.5rem; border-radius: 4px;
+  font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted);
+}
+.session-meta { display: flex; gap: 1rem; font-size: 0.8rem; color: var(--text-muted); }
+.session-summary { font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.4rem; }
+
+/* Cost chart */
+.chart-container {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 1.2rem; margin-bottom: 1.5rem;
+}
+.chart-svg { width: 100%; }
+.chart-bar { transition: all 0.15s ease; }
+.chart-bar:hover { opacity: 0.8; }
+.chart-label { fill: var(--text-muted); font-size: 11px; font-family: var(--font-mono); }
+.chart-value { fill: var(--text-secondary); font-size: 10px; font-family: var(--font-mono); }
+
+/* Sidebar */
+.sidebar {}
+.project-list { display: flex; flex-direction: column; gap: 0.4rem; }
+.project-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.6rem 0.8rem; background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 8px; font-size: 0.85rem; transition: all 0.15s ease; cursor: pointer;
+}
+.project-item:hover { border-color: var(--border-accent); }
+.project-name { font-family: var(--font-mono); color: var(--accent-secondary); }
+.project-stats { color: var(--text-muted); font-size: 0.75rem; font-family: var(--font-mono); }
+
+/* Modal */
+.modal-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(12px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.15s ease;
+}
+.modal-overlay.active { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--bg-secondary); border: 1px solid var(--border-accent);
+  border-radius: 16px; padding: 2rem; max-width: 700px; width: 90%; max-height: 80vh;
+  overflow-y: auto; box-shadow: 0 0 40px var(--accent-glow);
+}
+.modal-close {
+  float: right; background: none; border: none; color: var(--text-muted);
+  font-size: 1.2rem; cursor: pointer;
+}
+.modal-close:hover { color: var(--text-primary); }
+.modal h2 { font-size: 1.2rem; margin-bottom: 1rem; color: var(--accent-secondary); font-family: var(--font-mono); }
+.modal-section { margin-bottom: 1rem; }
+.modal-section h3 { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem; }
+.modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+.modal-field { font-size: 0.85rem; }
+.modal-field .label { color: var(--text-muted); }
+.modal-field .value { color: var(--text-primary); font-family: var(--font-mono); }
+.tool-bar { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.3rem; font-size: 0.8rem; }
+.tool-bar-fill { height: 14px; border-radius: 3px; background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary)); }
+.tool-bar-label { color: var(--text-secondary); min-width: 70px; font-family: var(--font-mono); }
+.tool-bar-count { color: var(--text-muted); font-family: var(--font-mono); font-size: 0.75rem; }
+.file-list { list-style: none; font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-secondary); }
+.file-list li { padding: 0.15rem 0; }
+
+@media (max-width: 768px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .main-layout { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">claude-brief</div>
+    <div class="header-right">
+      <span id="lastUpdated"></span>
+      <select class="time-select" id="timeRange">
+        <option value="24h">Last 24 hours</option>
+        <option value="7d">Last 7 days</option>
+        <option value="30d">Last 30 days</option>
+      </select>
+      <button class="btn" onclick="refreshData()">Refresh</button>
+    </div>
+  </div>
+
+  <!-- Stats row -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Sessions</div>
+      <div class="stat-value sessions" id="statSessions">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Cost</div>
+      <div class="stat-value cost" id="statCost">$0.00</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Tokens</div>
+      <div class="stat-value tokens" id="statTokens">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Active Projects</div>
+      <div class="stat-value projects" id="statProjects">0</div>
+    </div>
+  </div>
+
+  <!-- Main layout -->
+  <div class="main-layout">
+    <div class="main-content">
+      <div class="section-title">Sessions</div>
+      <div class="timeline" id="timeline"></div>
+
+      <div class="section-title">Cost (last 7 days)</div>
+      <div class="chart-container">
+        <svg id="costChart" class="chart-svg" height="160"></svg>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="section-title">Projects</div>
+      <div class="project-list" id="projectList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Session detail modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<script>
+const API = '';
+let currentRange = '24h';
+let allSessions = [];
+let stats = null;
+
+document.getElementById('timeRange').addEventListener('change', (e) => {
+  currentRange = e.target.value;
+  refreshData();
+});
+
+document.getElementById('modalOverlay').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeModal();
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
+});
+
+async function refreshData() {
+  try {
+    const [sessRes, statsRes] = await Promise.all([
+      fetch(API + '/api/sessions?since=' + currentRange),
+      fetch(API + '/api/stats?since=' + currentRange)
+    ]);
+    allSessions = await sessRes.json();
+    stats = await statsRes.json();
+    renderAll();
+    document.getElementById('lastUpdated').textContent = 'Updated ' + new Date().toLocaleTimeString();
+  } catch (err) {
+    console.error('Failed to fetch data:', err);
+  }
+}
+
+function renderAll() {
+  renderStats();
+  renderTimeline();
+  renderCostChart();
+  renderProjects();
+}
+
+function renderStats() {
+  if (!stats) return;
+  document.getElementById('statSessions').textContent = stats.totalSessions;
+  document.getElementById('statCost').textContent = '$' + stats.totalCost.toFixed(2);
+  document.getElementById('statTokens').textContent = formatTokens(stats.totalTokens);
+  document.getElementById('statProjects').textContent = stats.activeProjects;
+}
+
+function renderTimeline() {
+  const el = document.getElementById('timeline');
+  if (!allSessions.length) {
+    el.innerHTML = '<div style="color:var(--text-muted);padding:2rem;text-align:center">No sessions in this time range.</div>';
+    return;
+  }
+  el.innerHTML = allSessions.map(s => {
+    const isFailed = s.errorCount > 0 || s.stopReason === 'max_tokens';
+    const statusClass = isFailed ? 'error' : 'success';
+    const model = shortModel(s.model);
+    const dur = formatDuration(s.durationMs);
+    const summary = s.lastAssistantMessage ? s.lastAssistantMessage.split('\n')[0].slice(0, 100) : '';
+    const time = new Date(s.startTime).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+    const files = (s.filesEdited || []).length;
+    return '<div class="session-card" onclick="showSession(\'' + s.sessionId + '\')">' +
+      '<div class="session-header">' +
+        '<span class="status-dot ' + statusClass + '"></span>' +
+        '<span class="project-badge">' + esc(s.projectSlug) + '</span>' +
+        '<span class="model-badge">' + model + '</span>' +
+      '</div>' +
+      '<div class="session-meta">' +
+        '<span>' + time + '</span>' +
+        '<span>' + dur + '</span>' +
+        '<span>' + files + ' files</span>' +
+        '<span style="color:var(--cost-color)">$' + s.estimatedCostUsd.toFixed(2) + '</span>' +
+      '</div>' +
+      (summary ? '<div class="session-summary">' + esc(summary) + '</div>' : '') +
+    '</div>';
+  }).join('');
+}
+
+function renderCostChart() {
+  const svg = document.getElementById('costChart');
+  // Group sessions by day for last 7 days
+  const days = {};
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().split('T')[0];
+    days[key] = 0;
+  }
+  allSessions.forEach(s => {
+    const key = new Date(s.startTime).toISOString().split('T')[0];
+    if (days[key] !== undefined) days[key] += s.estimatedCostUsd;
+  });
+  const entries = Object.entries(days);
+  const maxCost = Math.max(...Object.values(days), 0.01);
+  const barWidth = 100 / entries.length;
+  const pad = 40;
+  const chartH = 120;
+
+  let html = '<defs><linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">' +
+    '<stop offset="0%" stop-color="#8b5cf6"/>' +
+    '<stop offset="100%" stop-color="#4a3f6e"/>' +
+    '</linearGradient></defs>';
+
+  entries.forEach(([date, cost], i) => {
+    const x = (i / entries.length) * 100;
+    const h = (cost / maxCost) * chartH;
+    const y = chartH - h + 10;
+    const dayLabel = new Date(date + 'T12:00').toLocaleDateString([], {weekday:'short'});
+    html += '<rect class="chart-bar" x="' + (x + 1) + '%" y="' + y + '" width="' + (barWidth - 2) + '%" height="' + h + '" rx="4" fill="url(#barGrad)"/>';
+    html += '<text class="chart-label" x="' + (x + barWidth/2) + '%" y="' + (chartH + 28) + '" text-anchor="middle">' + dayLabel + '</text>';
+    if (cost > 0) {
+      html += '<text class="chart-value" x="' + (x + barWidth/2) + '%" y="' + (y - 4) + '" text-anchor="middle">$' + cost.toFixed(2) + '</text>';
+    }
+  });
+
+  svg.innerHTML = html;
+}
+
+function renderProjects() {
+  const el = document.getElementById('projectList');
+  if (!stats || !stats.projectBreakdown) { el.innerHTML = ''; return; }
+  el.innerHTML = stats.projectBreakdown.map(p =>
+    '<div class="project-item" onclick="filterProject(\'' + esc(p.project) + '\')">' +
+      '<span class="project-name">' + esc(p.project) + '</span>' +
+      '<span class="project-stats">' + p.sessions + ' · $' + p.cost.toFixed(2) + '</span>' +
+    '</div>'
+  ).join('');
+}
+
+async function showSession(id) {
+  const overlay = document.getElementById('modalOverlay');
+  const content = document.getElementById('modalContent');
+
+  const s = allSessions.find(x => x.sessionId === id);
+  if (!s) return;
+
+  const cacheHit = s.inputTokens + s.cacheReadTokens > 0
+    ? ((s.cacheReadTokens / (s.inputTokens + s.cacheReadTokens)) * 100).toFixed(0) : '0';
+  const toolCalls = s.toolCalls || [];
+  const maxTC = Math.max(...toolCalls.map(t => t.count), 1);
+  const files = s.filesEdited || [];
+
+  content.innerHTML =
+    '<button class="modal-close" onclick="closeModal()">&times;</button>' +
+    '<h2>' + esc(s.projectSlug) + ' &middot; ' + formatDuration(s.durationMs) + '</h2>' +
+    '<div class="modal-section"><h3>Metadata</h3><div class="modal-grid">' +
+      field('Model', s.model) +
+      field('Branch', s.gitBranch || 'HEAD') +
+      field('Start', new Date(s.startTime).toLocaleString()) +
+      field('Duration', formatDuration(s.durationMs)) +
+      field('Cost', '$' + s.estimatedCostUsd.toFixed(4)) +
+      field('Cache Hit', cacheHit + '%') +
+      field('Thinking', s.hasThinking ? 'Yes' : 'No') +
+      field('Speed', s.speedMode || 'standard') +
+      field('Errors', String(s.errorCount)) +
+      field('Compactions', String(s.compactionCount)) +
+      field('MCP Calls', String(s.mcpToolCalls || 0)) +
+      field('Subagents', String(s.subagentSpawns || 0)) +
+    '</div></div>' +
+    '<div class="modal-section"><h3>Token Usage</h3><div class="modal-grid">' +
+      field('Input', formatTokens(s.inputTokens)) +
+      field('Output', formatTokens(s.outputTokens)) +
+      field('Cache Read', formatTokens(s.cacheReadTokens)) +
+      field('Cache Creation', formatTokens(s.cacheCreationTokens)) +
+    '</div></div>' +
+    (toolCalls.length ? '<div class="modal-section"><h3>Tools</h3>' +
+      toolCalls.slice(0, 10).map(t =>
+        '<div class="tool-bar">' +
+          '<span class="tool-bar-label">' + esc(t.name) + '</span>' +
+          '<div style="flex:1;background:var(--bg-primary);border-radius:3px;overflow:hidden">' +
+            '<div class="tool-bar-fill" style="width:' + ((t.count/maxTC)*100) + '%"></div>' +
+          '</div>' +
+          '<span class="tool-bar-count">' + t.count + '</span>' +
+        '</div>'
+      ).join('') +
+    '</div>' : '') +
+    (files.length ? '<div class="modal-section"><h3>Files Changed (' + files.length + ')</h3><ul class="file-list">' +
+      files.slice(0, 15).map(f => '<li>' + esc(f.split(/[/\\]/).pop()) + '</li>').join('') +
+      (files.length > 15 ? '<li style="color:var(--text-muted)">+' + (files.length-15) + ' more</li>' : '') +
+    '</ul></div>' : '') +
+    (s.lastAssistantMessage ? '<div class="modal-section"><h3>Summary</h3><p style="font-size:0.85rem;color:var(--text-secondary)">' + esc(s.lastAssistantMessage.slice(0,300)) + '</p></div>' : '');
+
+  overlay.classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('active');
+}
+
+function filterProject(name) {
+  // Simple filter by refetching
+  fetch(API + '/api/sessions?since=' + currentRange + '&project=' + encodeURIComponent(name))
+    .then(r => r.json())
+    .then(data => { allSessions = data; renderTimeline(); });
+}
+
+function field(label, value) {
+  return '<div class="modal-field"><span class="label">' + label + ':</span> <span class="value">' + esc(value) + '</span></div>';
+}
+
+function formatTokens(n) {
+  if (!n) return '0';
+  if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
+  if (n >= 1000) return Math.round(n/1000) + 'k';
+  return String(n);
+}
+
+function formatDuration(ms) {
+  if (!ms) return '0m';
+  const min = Math.floor(ms / 60000);
+  if (min < 1) return '<1m';
+  if (min < 60) return min + 'min';
+  const h = Math.floor(min / 60);
+  const m = min % 60;
+  return m > 0 ? h + 'h ' + m + 'm' : h + 'h';
+}
+
+function shortModel(m) {
+  if (!m) return '?';
+  if (m.includes('opus')) return 'opus';
+  if (m.includes('haiku')) return 'haiku';
+  if (m.includes('sonnet')) return 'sonnet';
+  return m;
+}
+
+function esc(s) {
+  if (!s) return '';
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// Initial load + auto-refresh
+refreshData();
+setInterval(refreshData, 30000);
+</script>
+</body>
+</html>
