@@ -2,9 +2,13 @@
   <img src="assets/splash.svg" alt="claude-brief" width="100%" />
 </p>
 
-# claude-brief
+<p align="center">
+  <img src="assets/demo.gif" width="100%" alt="demo"/>
+</p>
 
-**Pick up exactly where your agents left off.**
+<p align="center">
+  <strong>The missing observability layer for Claude Code Routines.</strong>
+</p>
 
 [![npm version](https://img.shields.io/npm/v/claude-brief.svg)](https://www.npmjs.com/package/claude-brief)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -12,17 +16,9 @@
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-8b5cf6.svg)](https://claude.ai/code)
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-gateway-orange.svg)](https://openclaw.ai)
 
-<p align="center">
-  <img src="assets/demo.gif" width="100%" alt="demo"/>
-</p>
+Claude Code Routines run while you're away — but until now there was no easy way to see what they actually did. claude-brief gives you a structured digest of every session: files changed, commits made, tokens spent, errors hit. Works locally and delivers to Slack, Telegram, Discord, ntfy, and OpenClaw gateways.
 
-claude-brief hooks into Claude Code's session lifecycle and gives you an instant,
-structured digest of everything your agents accomplished -- files changed, commits made,
-costs incurred, errors hit -- since the last time you checked. Run it after a meeting,
-after lunch, or after a weekend. Works with Claude Code Routines, OpenClaw gateways,
-Telegram, Slack, Discord, and ntfy.
-
-## Install
+## 📦 Install
 
 ```bash
 npm install -g claude-brief
@@ -39,7 +35,7 @@ npx claude-brief install
 curl -fsSL https://raw.githubusercontent.com/jakeefr/claude-brief/main/openclaw/install.sh | bash
 ```
 
-## Usage
+## 🖥️ Usage
 
 ```
 claude-brief              # Digest since last run
@@ -86,7 +82,7 @@ claude-brief  .  since 2h 34m ago
   Run 'claude-brief tui' to explore history  .  'claude-brief dashboard' for web view
 ```
 
-## What it tracks
+## 📊 What it tracks
 
 | Data | Description |
 |------|-------------|
@@ -103,7 +99,7 @@ claude-brief  .  since 2h 34m ago
 | Subagents | Spawned subagent count |
 | Web | Search and fetch request counts |
 
-## Cost display
+## 💰 Cost display
 
 claude-brief detects your billing mode from `~/.claude/.credentials.json`:
 
@@ -158,7 +154,7 @@ claude-brief export --format json # Export session history as JSON
 claude-brief export --format csv  # Export session history as CSV
 ```
 
-## Delivery
+## 🔔 Delivery
 
 ### Slack
 
@@ -190,7 +186,7 @@ claude-brief config set discord-webhook https://discord.com/api/webhooks/...
 
 See the OpenClaw Gateway section below.
 
-## Web Viewer
+## 🌐 Web Viewer
 
 ```bash
 claude-brief dashboard
@@ -203,7 +199,7 @@ Opens a local web dashboard at `localhost:7878` with:
 - Project sidebar with session counts and costs
 - Auto-refreshes every 30 seconds
 
-## OpenClaw Gateway
+## 🦞 OpenClaw Gateway
 
 For delivery via WhatsApp, Telegram, Discord, Signal, iMessage, or Line through OpenClaw:
 
@@ -224,7 +220,7 @@ plugins:
 
 Then send `/brief` to your bot for an on-demand digest.
 
-## How it works
+## ⚙️ How it works
 
 ```
 Claude Code session ends
@@ -237,7 +233,7 @@ Claude Code session ends
 
 The database starts empty and populates automatically as Claude Code sessions complete. Run `claude-brief db reset` to clear all stored sessions if needed.
 
-## Routine awareness (beta)
+## 🔄 Routine awareness (beta)
 
 Routines run on Anthropic's cloud and don't produce local JSONL files. To include Routine activity in your briefs, add a `brief-log` step at the end of your Routine that writes a `.claude/brief-log.json` summary file to the repo. claude-brief will check for these files in workspace directories and include them in digests.
 
@@ -247,7 +243,44 @@ See `routines/brief-log.yaml` for a template.
 
 claude-brief reads local session data. For multi-machine setups, run claude-brief on each machine independently.
 
-## Contributing
+## 🔒 Trust & Safety
+
+<details>
+<summary>Does claude-brief send my data anywhere?</summary>
+
+No. claude-brief runs entirely locally. Session data is stored in `~/.claude-brief/db.sqlite` on your machine. Nothing is sent to any server unless you explicitly configure a delivery channel (Slack, Telegram, etc.).
+
+</details>
+
+<details>
+<summary>What data does claude-brief read?</summary>
+
+claude-brief reads Claude Code's session JSONL files from `~/.claude/projects/`. These files contain tool call names, file paths, token counts, timestamps, and the final assistant message summary. It never reads or stores the content of your actual code or user prompts.
+
+</details>
+
+<details>
+<summary>Does claude-brief store my API keys or credentials?</summary>
+
+No. claude-brief reads `~/.claude/.credentials.json` only to detect your subscription plan tier for billing display. It never stores, transmits, or logs credential values.
+
+</details>
+
+<details>
+<summary>Is my session data safe?</summary>
+
+Session summaries are stored locally in SQLite at `~/.claude-brief/db.sqlite`. Only you have access to this file. Run `claude-brief db reset` at any time to permanently delete all stored data.
+
+</details>
+
+<details>
+<summary>What about the OpenClaw gateway?</summary>
+
+The OpenClaw integration sends digest text to your configured messaging channel (Telegram, Slack, etc.) via OpenClaw's local gateway process. No data passes through claude-brief's servers — delivery goes directly from your machine through your configured channels.
+
+</details>
+
+## 🤝 Contributing
 
 Pull requests welcome. Please open an issue first for major changes.
 
