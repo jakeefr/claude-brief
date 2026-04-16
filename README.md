@@ -235,6 +235,8 @@ Claude Code session ends
   -> Delivers via: terminal / Slack / Telegram / ntfy / OpenClaw
 ```
 
+The database starts empty and populates automatically as Claude Code sessions complete. Run `claude-brief db reset` to clear all stored sessions if needed.
+
 ## Routine awareness (beta)
 
 Routines run on Anthropic's cloud and don't produce local JSONL files. To include Routine activity in your briefs, add a `brief-log` step at the end of your Routine that writes a `.claude/brief-log.json` summary file to the repo. claude-brief will check for these files in workspace directories and include them in digests.
@@ -256,6 +258,15 @@ npm install
 npm run build
 npm run dev    # watch mode
 ```
+
+To test with sample data, seed the database with demo sessions:
+
+```bash
+npx tsx scripts/seed-demo.ts
+claude-brief --since 24h
+```
+
+This populates `~/.claude-brief/db.sqlite` with four sample sessions matching the example output above. Run `claude-brief db reset` to clear them.
 
 ## License
 
