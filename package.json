@@ -10,6 +10,7 @@
   "files": [
     "dist/",
     "hooks/",
+    "src/web/viewer.html",
     "assets/splash.svg",
     "LICENSE",
     "README.md"

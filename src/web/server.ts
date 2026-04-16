@@ -11,8 +11,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const VIEWER_CANDIDATES = [
+  // Installed via npm: dist/../src/web/viewer.html
+  path.join(__dirname, "..", "src", "web", "viewer.html"),
+  // Dev fallback: running from source tree
   path.join(__dirname, "..", "web", "viewer.html"),
-  path.join(__dirname, "..", "..", "src", "web", "viewer.html"),
   path.join(__dirname, "viewer.html"),
 ];
 
