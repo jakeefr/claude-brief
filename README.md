@@ -11,13 +11,11 @@
 </p>
 
 <p align="center">
-
-[![npm version](https://img.shields.io/npm/v/claude-brief.svg)](https://www.npmjs.com/package/claude-brief)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Node 18+](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](https://nodejs.org)
-[![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-8b5cf6.svg)](https://claude.ai/code)
-[![OpenClaw](https://img.shields.io/badge/OpenClaw-gateway-orange.svg)](https://openclaw.ai)
-
+  <a href="https://www.npmjs.com/package/claude-brief"><img src="https://img.shields.io/npm/v/claude-brief.svg" alt="npm version"/></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License: MIT"/></a>
+  <a href="https://nodejs.org"><img src="https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg" alt="Node 18+"/></a>
+  <a href="https://claude.ai/code"><img src="https://img.shields.io/badge/Claude%20Code-plugin-8b5cf6.svg" alt="Claude Code"/></a>
+  <a href="https://openclaw.ai"><img src="https://img.shields.io/badge/OpenClaw-gateway-orange.svg" alt="OpenClaw"/></a>
 </p>
 
 Claude Code Routines run while you're away — but until now there was no easy way to see what they actually did. claude-brief gives you a structured digest of every session: files changed, commits made, tokens spent, errors hit. Works locally and delivers to Slack, Telegram, Discord, ntfy, and OpenClaw gateways.
