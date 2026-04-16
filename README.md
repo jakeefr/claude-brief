@@ -18,6 +18,12 @@
   <a href="https://openclaw.ai"><img src="https://img.shields.io/badge/OpenClaw-gateway-orange.svg" alt="OpenClaw"/></a>
 </p>
 
+<p align="center">
+  <a href="https://www.producthunt.com/products/claude-brief?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-claude-brief" target="_blank" rel="noopener noreferrer">
+    <img alt="claude-brief - See what your Claude Code Routines did while you were away | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1125030&theme=dark&t=1776322067752"/>
+  </a>
+</p>
+
 Claude Code Routines run while you're away, but until now there was no easy way to see what they actually did. claude-brief gives you a structured digest of every session: files changed, commits made, tokens spent, errors hit. Works locally and delivers to Slack, Telegram, Discord, ntfy, and OpenClaw gateways.
 
 ## 📦 Install
