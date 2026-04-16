@@ -10,11 +10,15 @@
   <strong>The missing observability layer for Claude Code Routines.</strong>
 </p>
 
+<p align="center">
+
 [![npm version](https://img.shields.io/npm/v/claude-brief.svg)](https://www.npmjs.com/package/claude-brief)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Node 18+](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](https://nodejs.org)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-8b5cf6.svg)](https://claude.ai/code)
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-gateway-orange.svg)](https://openclaw.ai)
+
+</p>
 
 Claude Code Routines run while you're away — but until now there was no easy way to see what they actually did. claude-brief gives you a structured digest of every session: files changed, commits made, tokens spent, errors hit. Works locally and delivers to Slack, Telegram, Discord, ntfy, and OpenClaw gateways.
 
