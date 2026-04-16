@@ -6,7 +6,7 @@ import { fileURLToPath } from "url";
 import { generateDigest, refreshFromJSONL, getStatusLine } from "./brief/generator.js";
 import { formatDigest, formatJSON, formatCSV, formatMarkdown } from "./brief/formatter.js";
 import { watchTriggers, processAllTriggers } from "./collector/hook.js";
-import { getSessions, closeDb } from "./collector/store.js";
+import { getSessions, closeDb, resetDb } from "./collector/store.js";
 import { setConfigValue, loadConfig } from "./types.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -187,6 +187,20 @@ program
         break;
     }
 
+    closeDb();
+  });
+
+// Database management commands
+const dbCmd = program
+  .command("db")
+  .description("Database management commands");
+
+dbCmd
+  .command("reset")
+  .description("Clear all stored sessions and metadata")
+  .action(() => {
+    const count = resetDb();
+    console.log(`Cleared ${count} session${count !== 1 ? "s" : ""} from database.`);
     closeDb();
   });
 

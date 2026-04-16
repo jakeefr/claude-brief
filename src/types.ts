@@ -199,6 +199,11 @@ export function calculateCost(
   return { cost, isEstimate };
 }
 
+export function cleanProjectSlug(slug: string): string {
+  let cleaned = slug.replace(/^[A-Za-z]--/, "");
+  return cleaned.replace(/--/g, "/");
+}
+
 export function shortModelName(model: string): string {
   if (model.includes("opus")) return "opus";
   if (model.includes("haiku")) return "haiku";

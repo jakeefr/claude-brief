@@ -2,7 +2,7 @@ import Database from "better-sqlite3";
 import * as fs from "fs";
 import * as path from "path";
 import * as os from "os";
-import { SessionSummary, SessionRow, AggregateStats } from "../types.js";
+import { SessionSummary, SessionRow, AggregateStats, cleanProjectSlug } from "../types.js";
 
 const DB_DIR = path.join(os.homedir(), ".claude-brief");
 const DB_PATH = path.join(DB_DIR, "db.sqlite");
@@ -163,7 +163,7 @@ export function bulkUpsertSessions(summaries: SessionSummary[]): void {
 function rowToSummary(row: SessionRow): SessionSummary {
   return {
     sessionId: row.session_id,
-    projectSlug: row.project_slug,
+    projectSlug: cleanProjectSlug(row.project_slug),
     projectPath: row.project_path,
     gitBranch: row.git_branch || "HEAD",
     startTime: new Date(row.start_time),
@@ -334,6 +334,15 @@ export function getLastRunTime(): number | null {
 export function setLastRunTime(timeMs: number): void {
   const db = getDb();
   db.prepare("INSERT OR REPLACE INTO meta (key, value) VALUES ('last_run', ?)").run(String(timeMs));
+}
+
+export function resetDb(): number {
+  const db = getDb();
+  const result = db.prepare("SELECT COUNT(*) as count FROM sessions").get() as { count: number };
+  const count = result.count;
+  db.exec("DELETE FROM sessions");
+  db.exec("DELETE FROM meta");
+  return count;
 }
 
 export function closeDb(): void {
